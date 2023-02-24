@@ -1,11 +1,21 @@
 const express = require('express');
-const mysql = require('mysql')
 const router = express.Router();
 
 const courseController = require('../controllers/courseController')
 
-router.get('/', courseController.listAllCourses);
+const { listAllCourses, createCourse, deleteCourse } = courseController
 
-router.post('/', courseController.createCourse);
+router.get('/', listAllCourses);
+router.post('/', createCourse);
+router.delete('/', deleteCourse);
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
