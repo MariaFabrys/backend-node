@@ -27,7 +27,7 @@ courseModel.createCourse = (course, callback) => {
     })
 }
 
-courseModel.deleteCourse = (course, callback) => {
+courseModel.deleteCourse = (id, callback) => {
     const sql = 'DELETE FROM cursos WHERE id =?; '
     const value =[id]
 

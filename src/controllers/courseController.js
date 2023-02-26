@@ -26,10 +26,7 @@ courseController.createCourse = (req, res) => {
 }
 
 courseController.deleteCourse = (req, res) => {
-
-    const {id} = req.body
-
-
+    const { id } = req.body
     courseModel.deleteCourse(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
