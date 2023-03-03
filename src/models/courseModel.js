@@ -1,43 +1,67 @@
-const con = require('../db/dbConnection')
+import con from '../db/dbConnection.js'
 
-const courseModel = {}
+//const courseModel = {}
 
-courseModel.listAllCourses = (callback) => {
+ export const listAllCourses = (callback) => {
     const sql = "SELECT * FROM cursos;"
     con.query(sql, (err, result) => {
         if (err) {
             callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
     })
 }
 
-courseModel.createCourse = (course, callback) => {
-    const { curso, cargahoraria } = course
-    const sql = 'INSERT INTO cursos (nome, cargahoraria) VALUES (?, ?);'
-    const values = [curso, cargahoraria]
+
+//forma mais rápida de inserir dados 
+export const createCourse = (course, callback) => {
+    const { nome, cargahoraria } = course
+    const sql = 'INSERT INTO cursos SET ?;'
+    const values = {nome, cargahoraria}
 
     con.query(sql, values, (err, result) => {
         if (err) {
             callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
         } else {
             callback(null, result)
         }
     })
 }
 
-courseModel.deleteCourse = (id, callback) => {
+ export const deleteCourse = (id, callback) => {
     const sql = 'DELETE FROM cursos WHERE id =?; '
     const value =[id]
 
     con.query(sql, value, (err, result) => {
         if (err) {
             callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
         } else {
             callback(null, result)
         }
     })
 }
 
-module.exports = courseModel
+export const updateCourse = (course, callback) => {
+    const { nome, cargahoraria } = course
+    const sql = 'UPDATE cursos SET ?;'
+    const values = { nome, cargahoraria }
+
+    con.query(sql, values, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
+
+export default { listAllCourses, createCourse, deleteCourse, updateCourse }

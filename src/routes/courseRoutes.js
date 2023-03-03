@@ -1,16 +1,20 @@
-const express = require('express');
-const router = express.Router();
+//const express = require('express');
+import express from 'express'
 
-const courseController = require('../controllers/courseController')
+ import { listAllCourses, createCourse, deleteCourse, updateCourse }
+ from'../controllers/courseController.js'
+ 
+ const router = express.Router();
 
-const { listAllCourses, createCourse, deleteCourse } = courseController
+//extraiu as funções de dentro do objeto, cada função virou uma variável
+//const { listAllCourses, createCourse, deleteCourse, updateCourse } = courseController
 
-router.get('/', listAllCourses);
-router.post('/', createCourse);
-router.delete('/', deleteCourse);
+router.get('/', listAllCourses); //select
+router.post('/', createCourse); //insert
+router.delete('/', deleteCourse); //delete
+router.put('/', updateCourse); //update
 
-module.exports = router;
-
+export default router
 
 
 

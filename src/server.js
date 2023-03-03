@@ -1,6 +1,9 @@
-const express = require('express')
-const courseRoutes = require('./routes/courseRoutes')
-const userRoutes = require('./routes/userRoutes')
+//const express = require('express')
+import  express  from 'express'
+//const courseRoutes = require('./routes/courseRoutes')
+import courseRoutes from './routes/courseRoutes.js'
+//const userRoutes = require('./routes/userRoutes')
+import userRoutes from './routes/userRoutes.js'
 
 const app = express()
 const port = 3100
@@ -19,3 +22,4 @@ app.all('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+

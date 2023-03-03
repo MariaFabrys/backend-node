@@ -1,11 +1,12 @@
-const userModel = {}
+// const userModel = {}
 
 
-userModel.createUser = (req, res) => {
+export const createUser = (req, res) => {
    
     res.json({ message: "Entrou na rota /course com POST!" })
 
 
 }
 
-module.exports = userModel
+
+export default { createUser }
