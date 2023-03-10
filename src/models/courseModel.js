@@ -14,6 +14,19 @@ import con from '../db/dbConnection.js'
     })
 }
 
+export const showCourse = (id, callback) => {
+    const sql = "SELECT * FROM cursos WHERE id = ?;"
+    const value = [id]
+    con.query(sql, value, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
 
 //forma mais rápida de inserir dados 
 export const createCourse = (course, callback) => {
@@ -64,4 +77,4 @@ export const updateCourse = (course, callback) => {
 }
 
 //deu as duas opção com default e sem
-export default { listAllCourses, createCourse, deleteCourse, updateCourse }
+export default { listAllCourses, createCourse, deleteCourse, updateCourse, showCourse }

@@ -9,6 +9,7 @@ import userRoutes from './routes/userRoutes.js'
 const app = express()
 const port = SERVER.PORT
 
+//
 app.use(express.json())
 
 //TODO: Tratar erro de json inválido
