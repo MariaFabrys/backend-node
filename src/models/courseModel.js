@@ -63,5 +63,5 @@ export const updateCourse = (course, callback) => {
     })
 }
 
-
+//deu as duas opção com default e sem
 export default { listAllCourses, createCourse, deleteCourse, updateCourse }

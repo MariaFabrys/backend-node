@@ -1,4 +1,3 @@
-import sql from 'mysql'
 import courseModel from '../models/courseModel.js'
 
 
@@ -46,5 +45,7 @@ export const deleteCourse = (req, res) => {
             res.json({ message: "Curso atualizado!" })
     })
 }
+
+
 
 

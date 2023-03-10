@@ -1,6 +1,8 @@
 //const express = require('express');
+//export default
 import express from 'express'
 
+//export
  import { listAllCourses, createCourse, deleteCourse, updateCourse }
  from'../controllers/courseController.js'
  
