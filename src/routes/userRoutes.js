@@ -1,13 +1,25 @@
+
 import express from 'express'
-const router = express.Router()
 
-router.get('/', (req, res) => {
-    res.json({ message: "Entrou na rota /user com GET!" })
-})
+import { listAllUsers, showUser, createUser, deleteUser, deleteIdUser, updateUser }
+    from '../controllers/userController.js'
 
-router.post('/', (req, res) => {
-    res.json({ message: "Entrou na rota /user com POST!" })
-})
+const router = express.Router();
+
+router.get('/', listAllUsers); //select
+router.get('/:id', showUser); //select listas pelo id na url
+router.post('/', createUser); //insert
+router.delete('/', deleteUser); //delete
+router.delete('/:id', deleteIdUser); //delete pelo id na url
+router.put('/', updateUser); //update
+
 
 export default router
+
+
+
+
+
+
+
 

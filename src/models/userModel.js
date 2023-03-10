@@ -1,12 +1,78 @@
-// const userModel = {}
+import con from '../db/dbConnection.js'
 
+export const listAllUsers = (callback) => {
+    const sql = "SELECT * FROM users;"
+    con.query(sql, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+        } else {
+            callback(null, result)
+        }
+    })
+}
 
-export const createUser = (req, res) => {
-   
-    res.json({ message: "Entrou na rota /course com POST!" })
-
-
+export const showUser = (id, callback) => {
+    const sql = "SELECT * FROM users WHERE id = ?;"
+    const value = [id]
+    con.query(sql, value, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+        } else {
+            callback(null, result)
+        }
+    })
 }
 
 
-export default { createUser }
+//forma mais rápida de inserir dados 
+export const createUser = (user, callback) => {
+    const { nomecompleto, nomeusuario, idade } = user
+    const sql = 'INSERT INTO users SET ?;'
+    const values = { nomecompleto, nomeusuario, idade }
+
+    con.query(sql, values, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
+export const deleteUser = (id, callback) => {
+    const sql = 'DELETE FROM users WHERE id =?; '
+    const value = [id]
+
+    con.query(sql, value, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
+export const updateUser = (user, callback) => {
+    const { nomecompleto, nomeusuario,  } = user
+    const sql = 'UPDATE cursos SET ?;'
+    const values = { nomecompleto, nomeusuario, idade  }
+
+    con.query(sql, values, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB error: ${err.sqlMessage}`)
+
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
+//deu as duas opção com default e sem
+export default { listAllUsers, showUser, createUser, deleteUser, updateUser }
