@@ -31,7 +31,7 @@ export const createUser = (req, res) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result)
-            res.json({ message: "Curso Cadastrado!" })
+            res.json({ message: "Usuário Cadastrado!" })
     })
 }
 
@@ -41,7 +41,7 @@ export const deleteUser = (req, res) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result)
-            res.json({ message: "Curso Deletado com sucesso!" })
+            res.json({ message: "Usuário Deletado com sucesso!" })
     })
 }
 
@@ -49,7 +49,7 @@ export const deleteIdUser = (req, res) => {
     const { id, slug } = req.params
     console.log(slug)
     //TODO Verificar se os dados são válidos
-    userModel.deleteIdUser(id, (error, result) => {
+    userModel.deleteUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result)
@@ -67,7 +67,7 @@ export const updateUser = (req, res) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result)
-            res.json({ message: "Curso atualizado!" })
+            res.json({ message: "Usuário atualizado!" })
     })
 }
 
