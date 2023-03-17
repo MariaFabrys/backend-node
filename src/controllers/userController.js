@@ -5,8 +5,13 @@ export const listAllUsers = (req, res) => {
     userModel.listAllUsers((error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
-        if (result)
-            res.json(result)
+        if (result) {
+            if (result.length) {
+                res.json(result)
+            } else {
+                res.json({ message: "Nenhum Usuário cadastrado!" })
+            }
+        }
     })
 }
 
@@ -16,11 +21,15 @@ export const showUser = (req, res) => {
     userModel.showUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
-        if (result)
-            res.json(result)
+        if (result) {
+            if (result.length) {
+                res.json(result[0])
+            } else {
+                res.status(404).json({ message: `Usuário ${id} não encontrado!` })
+            }
+        }
     })
 }
-
 
 export const createUser = (req, res) => {
 
@@ -30,20 +39,29 @@ export const createUser = (req, res) => {
     userModel.createUser(user, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
-        if (result)
-            res.json({ message: "Usuário Cadastrado!" })
+        if (result) {
+            res.json({
+                message: "Usuário Cadastrado!",
+                user: { id: result.insertId, ...user}
+            })
+        }
     })
 }
-
 export const deleteUser = (req, res) => {
     const { id } = req.body
     userModel.deleteUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
-        if (result)
-            res.json({ message: "Usuário Deletado com sucesso!" })
+        if (result) {
+            if (result.affectedRows) {
+                res.json({ message: "Usuário deletado com Sucesso!" })
+            } else {
+                res.status(404).json({ message: `usuário ${id} não encontrado` })
+            }
+        }
     })
 }
+
 
 export const deleteIdUser = (req, res) => {
     const { id, slug } = req.params
@@ -52,22 +70,34 @@ export const deleteIdUser = (req, res) => {
     userModel.deleteUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
-        if (result)
-            //TODO Verificar se ao menos uma linha foi removida!
-            res.json({ message: "Curso Deletado com Sucesso!" })
+        if (result) {
+            if (result.affectedRows) {
+                res.json({ message: "Usuário deletado com Sucesso!" })
+            } else {
+                res.status(404).json({ message: `usuário ${id} não encontrado` })
+            }
+        }
     })
 }
 
+
 export const updateUser = (req, res) => {
 
-    const course = req.body
+    const user = req.body
     //TODO Verificar se os dados são válidos
 
-    userModel.updateUser(course, (error, result) => {
+    userModel.updateUser(user, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result)
             res.json({ message: "Usuário atualizado!" })
+
+        if (result.affectdRows) {
+
+            res.json({ message: "Usuário atualizado com sucesso!" })
+        } else {
+            res.status(404).json({ message: `Usuário ${user.id} não encontrado` })
+        }
     })
 }
 
