@@ -7,6 +7,7 @@
 -- Versão do servidor: 10.4.22-MariaDB
 -- versão do PHP: 8.0.13
 
+CREATE DATABASE apinode;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
