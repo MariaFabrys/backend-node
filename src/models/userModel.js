@@ -1,4 +1,18 @@
 import con from '../db/dbConnection.js'
+import {z} from 'zod'
+
+
+//validar dados
+export const userSchame = z.object({
+    id: z.number().optional(),
+    nomecompleto: z.string().min(3).max(50),
+    nomeusuario: z.string().min(5, { message: "O usuário deve ter ao menos 5 Caracteres" }).max(50),
+    idade: z.number()
+})
+
+export const validateUser =(user) => {
+    return userSchame.parse(user)
+}
 
 export const listAllUsers = (callback) => {
     const sql = "SELECT * FROM usuarios;"
@@ -75,4 +89,4 @@ export const updateUser = (user, callback) => {
 }
 
 //deu as duas opção com default e sem
-export default { listAllUsers, showUser, createUser, deleteUser, updateUser }
+export default { listAllUsers, showUser, createUser, deleteUser, updateUser, validateUser }
