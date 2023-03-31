@@ -1,4 +1,5 @@
 import userModel from '../models/userModel.js'
+import zodErrorFormat from '../helper/zodErrorFormat.js'
 
 
 export const listAllUsers = (req, res) => {
@@ -26,31 +27,34 @@ export const showUser = (req, res) => {
     })
 }
 
+
 export const createUser = (req, res) => {
-
     const user = req.body
+    const validUser = userModel.validateUser(user)
 
-    try {
-        userModel.validateUser(user)
-        userModel.createUser(user, (error, result) => {
-            if (error)
-                res.status(500).json({ message: "Erro no Banco de Dados" })
-            if (result) {
-                res.json({
-                    message: "Usuário Cadastrado!",
-                    user: {
-                        id: result.insertId,
-                        ...user
-                    }
-                })
-            }
-        })
-    } catch (error) {
+    if(validUser?.error){
         res.status(400).json({
             message: 'Dados inválidos',
-            error: error.errors
+            fields: zodErrorFormat(validUser.error)
         })
+        return
     }
+    const userValidated = validUser.data
+
+    //TODO Validar se o email já existe no banco antes de cadastrar
+    userModal.createUser(userValidated, (error,result)=>{
+        if(error)
+        res.status(500).json({message: "Erro no Banco de Dados"})
+        if(result){
+            res.json({
+                message: "Usuário Cadastrado!",
+                user: {
+                    id: result.insertId, ...user
+                }
+            })
+        }
+    })
+
 }
 
 
