@@ -19,6 +19,17 @@ export const listAllUsers = (req, res) => {
 export const showUser = (req, res) => {
     const id = req.params.id
 
+    if(!id || isNaN(id)){
+        res.status(400).json({
+            message: "Dados inválidos"
+            fields:{
+                id: 
+            }
+
+        })
+        
+    }
+
     userModel.showUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
