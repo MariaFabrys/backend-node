@@ -1,9 +1,6 @@
-//const express = require('express')
 import  express  from 'express'
 import { SERVER } from './config.js'
-//const courseRoutes = require('./routes/courseRoutes')
 import courseRoutes from './routes/courseRoutes.js'
-//const userRoutes = require('./routes/userRoutes')
 import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middlewares/errorHandler.js'
 import logger from './middlewares/logger.js'
