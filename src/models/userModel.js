@@ -20,19 +20,19 @@ export const userSchame = z.object({
 
     nomeusuario: z.string
     ({
-        required_error: "Nome é obrigatória.",
-        invalid_type_error: "Nome deve ser uma string.",
+        required_error: "Usuario é obrigatória.",
+        invalid_type_error: "Usuario deve ser uma string.",
     })
     .min(3, { message: "O usuário deve ter ao menos 3 Caracteres!" })
     .max(50, {message: "O usuário deve ter no máximo de 50 Caracteres!"}),
 
     idade: z.number
         ({
-            required_error: "Nome é obrigatória.",
-            invalid_type_error: "Nome deve ser uma string.",
+            required_error: "Idade é obrigatória.",
+            invalid_type_error: "Idade deve ser um número!.",
         })
-    .min(2, { message: "Idade deve ter no mínimo 2 Caracteres!" })
-    .max(3, { message: "Nome deve ter no màximo 3 Caracteres!" }),
+    .min(18, { message: "Você precisa ter no mínimo 18 anos para acessar o site!" })
+        .max(100, { message: "Você pode ter no Máximo 100 anos para acessar o site!" }),
 
 })
 

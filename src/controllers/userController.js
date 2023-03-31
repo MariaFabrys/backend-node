@@ -42,7 +42,7 @@ export const createUser = (req, res) => {
     const userValidated = validUser.data
 
     //TODO Validar se o email já existe no banco antes de cadastrar
-    userModal.createUser(userValidated, (error,result)=>{
+    userModel.createUser(userValidated, (error,result)=>{
         if(error)
         res.status(500).json({message: "Erro no Banco de Dados"})
         if(result){
