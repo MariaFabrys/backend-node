@@ -40,7 +40,7 @@ export const userSchame = z.object({
 
 //parse devolve as mensagens de erro ou seu deu tudo certo
 export const validateUser = (user) => {
-    return userSchame.parse(user)
+    return userSchame.safeParse(user)
 }
 
 export const listAllUsers = (callback) => {
