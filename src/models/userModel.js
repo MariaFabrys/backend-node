@@ -2,15 +2,44 @@ import con from '../db/dbConnection.js'
 import {z} from 'zod'
 
 
-//validar dados
+//TODO testar regex com zod e ChatGPT
+
 export const userSchame = z.object({
-    id: z.number().optional(),
-    nomecompleto: z.string().min(3).max(50),
-    nomeusuario: z.string().min(5, { message: "O usuário deve ter ao menos 5 Caracteres" }).max(50),
-    idade: z.number()
+    
+    id: z.number({message: "ID deve ser um valor númerico!"}).
+        optional(),
+
+    nomecompleto: z.string
+    ({
+        required_error: "Nome é obrigatória.",
+        invalid_type_error: "Nome deve ser uma string.",
+    })
+
+     .min(3, {message: "Nome deve ter no mínimo 3 Caracteres!"})
+     .max(100, {message:"Nome deve ter no màximo 100 Caracteres!"}),
+
+    nomeusuario: z.string
+    ({
+        required_error: "Nome é obrigatória.",
+        invalid_type_error: "Nome deve ser uma string.",
+    })
+    .min(3, { message: "O usuário deve ter ao menos 3 Caracteres!" })
+    .max(50, {message: "O usuário deve ter no máximo de 50 Caracteres!"}),
+
+    idade: z.number
+        ({
+            required_error: "Nome é obrigatória.",
+            invalid_type_error: "Nome deve ser uma string.",
+        })
+    .min(2, { message: "Idade deve ter no mínimo 2 Caracteres!" })
+    .max(3, { message: "Nome deve ter no màximo 3 Caracteres!" }),
+
 })
 
-export const validateUser =(user) => {
+
+
+//parse devolve as mensagens de erro ou seu deu tudo certo
+export const validateUser = (user) => {
     return userSchame.parse(user)
 }
 
