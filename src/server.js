@@ -9,6 +9,7 @@ const app = express()
 const port = SERVER.PORT
 
 app.use(logger)
+app.use(cors())
 app.use(express.json())
 
 app.use('/course', courseRoutes)
