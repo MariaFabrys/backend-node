@@ -1,5 +1,6 @@
 import  express  from 'express'
 import { SERVER } from './config.js'
+import cors from 'cors'
 import courseRoutes from './routes/courseRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middlewares/errorHandler.js'
