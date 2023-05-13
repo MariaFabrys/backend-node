@@ -1,54 +1,60 @@
 import con from '../db/dbConnection.js'
-import {z} from 'zod'
+import { z } from 'zod'
+import sha256 from '../helper/sha256.js'
 
+//TODO Testar regex com zod e ChatGPT
 
-//TODO testar regex com zod e ChatGPT
-
-export const userSchame = z.object({
-    
-    id: z.number({message: "ID deve ser um valor númerico!"}).
-        optional(),
-
-    nomecompleto: z.string
-    ({
-        required_error: "Nome é obrigatória.",
-        invalid_type_error: "Nome deve ser uma string.",
-    })
-
-     .min(3, {message: "Nome deve ter no mínimo 3 Caracteres!"})
-     .max(100, {message:"Nome deve ter no màximo 100 Caracteres!"}),
-
-    nomeusuario: z.string
-    ({
-        required_error: "Usuario é obrigatória.",
-        invalid_type_error: "Usuario deve ser uma string.",
-    })
-    .min(3, { message: "O usuário deve ter ao menos 3 Caracteres!" })
-    .max(50, {message: "O usuário deve ter no máximo de 50 Caracteres!"}),
-
-    idade: z.number
-        ({
-            required_error: "Idade é obrigatória.",
-            invalid_type_error: "Idade deve ser um número!.",
+const userSchema = z.object({
+    id:
+        z.number({
+            required_error: "ID é obrigatório.",
+            invalid_type_error: "ID deve ser um número.",
+        }),
+    name:
+        z.string({
+            required_error: "Nome é obrigatória.",
+            invalid_type_error: "Nome deve ser uma string.",
         })
-    .min(18, { message: "Você precisa ter no mínimo 18 anos para acessar o site!" })
-        .max(100, { message: "Você pode ter no Máximo 100 anos para acessar o site!" }),
-
+            .min(3, { message: "Nome deve ter no mínimo 3 caracteres." })
+            .max(100, { message: "Nome deve ter no máximo 100 caracteres." }),
+    email:
+        z.string({
+            required_error: "Email é obrigatória.",
+            invalid_type_error: "Email deve ser uma string.",
+        })
+            .email({ message: "Email Inválido." })
+            .min(5, { message: "O email deve ter ao menos 5 caracteres." })
+            .max(200, { message: "Email deve ter no máximo 200 caracteres." }),
+    pass:
+        z.string({
+            required_error: "Senha é obrigatória.",
+            invalid_type_error: "Senha deve ser uma string.",
+        })
+            .min(6, { message: "Senha deve ter no mínimo 6 caracteres." })
+            .max(256, { message: "Senha deve ter no máximo 256 caracteres." }),
+    avatar:
+        z.string({
+            message: "Avatar deve ser uma string.",
+        })
+            .url({ message: "Avatar deve ser uma URL válida." })
+            .optional()
 })
 
+export const validateUserToCreate = (user) => {
+    const partialUserSchema = userSchema.partial({ id: true });
+    return partialUserSchema.safeParse(user)
+}
 
-
-//parse devolve as mensagens de erro ou seu deu tudo certo
-export const validateUser = (user) => {
-    return userSchame.safeParse(user)
+export const validateUserToUpdate = (user) => {
+    return userSchema.safeParse(user)
 }
 
 export const listAllUsers = (callback) => {
-    const sql = "SELECT * FROM usuarios;"
+    const sql = "SELECT * FROM users;"
     con.query(sql, (err, result) => {
         if (err) {
             callback(err, null)
-            console.log(`DB error: ${err.sqlMessage}`)
+            console.log(`DB Error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
@@ -56,30 +62,28 @@ export const listAllUsers = (callback) => {
 }
 
 export const showUser = (id, callback) => {
-    const sql = "SELECT * FROM usuarios WHERE id = ?;"
+    const sql = "SELECT * FROM users WHERE id = ?;"
     const value = [id]
     con.query(sql, value, (err, result) => {
         if (err) {
             callback(err, null)
-            console.log(`DB error: ${err.sqlMessage}`)
+            console.log(`DB Error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
     })
 }
 
-
-//forma mais rápida de inserir dados 
 export const createUser = (user, callback) => {
-    const { nomecompleto, nomeusuario, idade } = user
-    const sql = 'INSERT INTO usuarios SET ?;'
-    const values = { nomecompleto, nomeusuario, idade }
+    const { name, email, pass, avatar } = user
+
+    const sql = 'INSERT INTO users (name, email, pass, avatar) VALUES (?, ?, ?, ?);'
+    const values = [name, email, sha256(pass), avatar]
 
     con.query(sql, values, (err, result) => {
         if (err) {
             callback(err, null)
-            console.log(`DB error: ${err.sqlMessage}`)
-
+            console.log(`DB Error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
@@ -87,14 +91,12 @@ export const createUser = (user, callback) => {
 }
 
 export const deleteUser = (id, callback) => {
-    const sql = 'DELETE FROM usuarios WHERE id =?; '
+    const sql = 'DELETE FROM users WHERE id = ?;'
     const value = [id]
-
     con.query(sql, value, (err, result) => {
         if (err) {
             callback(err, null)
-            console.log(`DB error: ${err.sqlMessage}`)
-
+            console.log(`DB Error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
@@ -102,20 +104,31 @@ export const deleteUser = (id, callback) => {
 }
 
 export const updateUser = (user, callback) => {
-    const { nomecompleto, nomeusuario, idade } = user
-    const sql = 'UPDATE usuarios SET ?;'
-    const values = { nomecompleto, nomeusuario, idade   }
+    const { id, name, email, pass, avatar } = user
+    const sql = 'UPDATE users SET name = ?, email = ?, pass = ?, avatar = ?  WHERE id = ? ;'
+    const values = [name, email, pass, avatar, id]
 
     con.query(sql, values, (err, result) => {
         if (err) {
             callback(err, null)
-            console.log(`DB error: ${err.sqlMessage}`)
-
+            console.log(`DB Error: ${err.sqlMessage}`)
         } else {
             callback(null, result)
         }
     })
 }
 
-//deu as duas opção com default e sem
-export default { listAllUsers, showUser, createUser, deleteUser, updateUser, validateUser }
+export const loginUser = (email, pass, callback) => {
+    const sql = 'SELECT * FROM users WHERE email = ? AND pass = ?;'
+    const value = [email, sha256(pass)]
+    con.query(sql, value, (err, result) => {
+        if (err) {
+            callback(err, null)
+            console.log(`DB Error: ${err.sqlMessage}`)
+        } else {
+            callback(null, result)
+        }
+    })
+}
+
+export default { listAllUsers, showUser, createUser, deleteUser, updateUser, validateUserToCreate, validateUserToUpdate, loginUser }
