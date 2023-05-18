@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 17-Mar-2023 às 19:13
+-- Tempo de geração: 18-Maio-2023 às 19:44
 -- Versão do servidor: 10.4.22-MariaDB
 -- versão do PHP: 8.0.13
 
-CREATE DATABASE apinode;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -39,29 +38,53 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `nome`, `cargahoraria`) VALUES
-(1, 'SGI', '60 horas'),
-(2, 'SGI', '60 horas'),
-(5, 'FW2', '30 horas');
+(17, 'LDA', '13 horas');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuarios`
+-- Estrutura da tabela `sessions`
 --
 
-CREATE TABLE `usuarios` (
+CREATE TABLE `sessions` (
   `id` int(11) NOT NULL,
-  `nomecompleto` varchar(100) NOT NULL,
-  `nomeusuario` varchar(100) NOT NULL,
-  `idade` varchar(100) NOT NULL
+  `id_user` int(11) NOT NULL,
+  `session` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `usuarios`
+-- Extraindo dados da tabela `sessions`
 --
 
-INSERT INTO `usuarios` (`id`, `nomecompleto`, `nomeusuario`, `idade`) VALUES
-(1, 'maria', 'Duda', '14');
+INSERT INTO `sessions` (`id`, `id_user`, `session`) VALUES
+(7, 34, 'f85bae9f-8af4-4263-b761-503fc07cff84'),
+(8, 34, 'b7f20980-bfab-4f62-b714-a8f2097511a7');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `pass` varchar(300) NOT NULL,
+  `avatar` varchar(500) NOT NULL,
+  `roles` varchar(100) NOT NULL DEFAULT 'user'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `pass`, `avatar`, `roles`) VALUES
+(25, 'Giovanna', 'giovana@gmail.com', '123456', 'https://avatars.githubusercontent.com/u/112205067?v=4', 'user'),
+(29, 'Fabricia', 'fabricia2@gmail.com', '12341234', 'https://avatars.githubusercontent.com/u/113722669?v=4', 'user'),
+(34, 'Paula', 'paula@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'https://avatars.githubusercontent.com/u/112205067?v=4', 'user'),
+(35, 'Daniel', 'daniel@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'https://avatars.githubusercontent.com/u/112205067?v=4', 'user'),
+(36, 'Renan Cavichi', 'renancavichi@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'https://avatars.githubusercontent.com/u/4259630?v=4', 'user, admin');
 
 --
 -- Índices para tabelas despejadas
@@ -74,10 +97,18 @@ ALTER TABLE `cursos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `usuarios`
+-- Índices para tabela `sessions`
 --
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_id_user` (`id_user`);
+
+--
+-- Índices para tabela `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -87,13 +118,29 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT de tabela `usuarios`
+-- AUTO_INCREMENT de tabela `sessions`
 --
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de tabela `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `sessions`
+--
+ALTER TABLE `sessions`
+  ADD CONSTRAINT `fk_id_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

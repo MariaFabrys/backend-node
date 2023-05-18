@@ -1,25 +1,21 @@
-
 import express from 'express'
+import {
+    listAllUsers,
+    showUser,
+    createUser,
+    deleteUser,
+    updateUser,
+    deleteIdUser
+} from '../controllers/userController.js'
+import authenticated from '../middlewares/authenticated.js'
 
-import { listAllUsers, showUser, createUser, deleteUser, deleteIdUser, updateUser }
-    from '../controllers/userController.js'
+const router = express.Router()
 
-const router = express.Router();
-
-router.get('/', listAllUsers); //select
-router.get('/:id', showUser); //select listas pelo id na url
-router.post('/', createUser); //insert
-router.delete('/', deleteUser); //delete
-router.delete('/:id', deleteIdUser); //delete pelo id na url
-router.put('/', updateUser); //update
-
+router.get('/', listAllUsers) // SELECT
+router.get('/:id', showUser) // SELECT
+router.post('/', createUser) // INSERT
+router.delete('/', authenticated, deleteUser) // DELETE ID FROM BODY JSON
+router.delete('/:id', authenticated, deleteIdUser) // DELETE ID FROM PARAMS
+router.put('/', authenticated, updateUser) // UPDATE
 
 export default router
-
-
-
-
-
-
-
-

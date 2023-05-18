@@ -57,6 +57,7 @@ export const createUser = (req, res) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
         if (result) {
+            delete user.pass
             res.json({
                 message: "Usuário Cadastrado!",
                 user: {
@@ -70,6 +71,9 @@ export const createUser = (req, res) => {
 
 export const deleteUser = (req, res) => {
     const { id } = req.body
+    const idUserLogged = req.idUserLogged
+    const rolesUserLogged = req.rolesUserLogged
+
     if (!id || isNaN(id)) {
         res.status(400).json({
             message: 'Dados inválidos',
@@ -79,6 +83,15 @@ export const deleteUser = (req, res) => {
         })
         return
     }
+
+    // verifica se o usuário é um admin ou se o id do user da sessão é igual ao do user para deletar
+    if (!rolesUserLogged.includes('admin')) {
+        if (idUserLogged !== id) {
+            res.status(401).json({ message: `Usuário não autorizado!` })
+            return
+        }
+    }
+
     userModel.deleteUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
@@ -94,6 +107,9 @@ export const deleteUser = (req, res) => {
 
 export const deleteIdUser = (req, res) => {
     const { id } = req.params
+    const idUserLogged = req.idUserLogged
+    const rolesUserLogged = req.rolesUserLogged
+
     if (!id || isNaN(id)) {
         res.status(400).json({
             message: 'Dados inválidos',
@@ -103,6 +119,15 @@ export const deleteIdUser = (req, res) => {
         })
         return
     }
+
+    // verifica se o usuário é um admin ou se o id do user da sessão é igual ao do user para deletar
+    if (!rolesUserLogged.includes('admin')) {
+        if (idUserLogged !== id) {
+            res.status(401).json({ message: `Usuário não autorizado!` })
+            return
+        }
+    }
+
     userModel.deleteUser(id, (error, result) => {
         if (error)
             res.status(500).json({ message: "Erro no Banco de Dados" })
@@ -119,6 +144,9 @@ export const deleteIdUser = (req, res) => {
 export const updateUser = (req, res) => {
     const user = req.body
     const validUser = userModel.validateUserToUpdate(user)
+    const idUserLogged = req.idUserLogged
+    const rolesUserLogged = req.rolesUserLogged
+
     if (validUser?.error) {
         res.status(400).json({
             message: 'Dados inválidos',
@@ -126,7 +154,16 @@ export const updateUser = (req, res) => {
         })
         return
     }
+
     const userValidated = validUser.data
+
+    // verifica se o usuário é um admin ou se o id do user da sessão é igual ao do user para deletar
+    if (!rolesUserLogged.includes('admin')) {
+        if (idUserLogged !== user.id) {
+            res.status(401).json({ message: `Usuário não autorizado!` })
+            return
+        }
+    }
 
     userModel.updateUser(userValidated, (error, result) => {
         if (error)
